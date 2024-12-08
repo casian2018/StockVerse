@@ -86,31 +86,39 @@ useEffect(() => {
     <>
       <Sidebar />
       <div className="fixed top-0 left-0 w-full h-full bg-black/50 z-40">
-        <main className="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-200 min-h-screen transition-all">
-          <div className="p-6">
-            <h1 className="text-2xl font-semibold py-4">Admin Panel</h1>
-            <div className="flex flex-row">
-              <div className="bg-no-repeat bg-red-200 border border-red-300 rounded-xl w-7/12 mr-2 p-6">
-                <p className="text-5xl text-indigo-900">
-                  Welcome <br />
-                  <strong>{user?.profilename || 'Guest'}</strong>
-                </p>
-                <span className="bg-red-300 text-xl text-white inline-block rounded-full mt-12 px-8 py-2">
-                  <strong>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
-                </span>
-              </div>
-              <div className="bg-no-repeat bg-orange-200 border border-orange-300 rounded-xl w-5/12 ml-2 p-6">
-                <p className="text-5xl text-indigo-900">
-                  Personal <br />
-                    <strong>{user?.personal?.length || 0}</strong>
-                </p>
-                <a href="/personal" className="bg-orange-300 text-xl text-white underline hover:no-underline inline-block rounded-full mt-12 px-8 py-2">
-                  <strong>See Personal</strong>
-                </a>
-              </div>
-            </div>
+      <main className="ml-64 bg-gray-50 min-h-screen transition-all">
+    <div className="p-8">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Welcome Back, Admin</h1>
+
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Welcome Section */}
+        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-lg p-8 shadow-md">
+          <h2 className="text-3xl font-bold mb-4">Welcome,</h2>
+          <p className="text-5xl mb-6">
+            <strong>{user?.profilename || "Guest"}</strong>
+          </p>
+          <div className="inline-block bg-white/20 px-6 py-2 rounded-full">
+            <span className="text-lg font-semibold">
+              {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </span>
           </div>
-        </main>
+        </div>
+
+        {/* Personal Section */}
+        <div className="bg-gradient-to-br from-orange-400 to-yellow-500 text-white rounded-lg p-8 shadow-md">
+          <h2 className="text-3xl font-bold mb-4">Personal</h2>
+          <p className="text-5xl font-bold mb-6">{user?.personal?.length || 0}</p>
+          <a
+            href="/personal"
+            className="inline-block bg-white/20 hover:bg-white/30 px-6 py-2 rounded-full text-lg font-semibold transition"
+          >
+            See Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
       </div>
     </>
   );

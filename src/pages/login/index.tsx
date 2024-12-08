@@ -28,46 +28,54 @@ export default function LoginPage() {
   };
   return (
     <>
-      <div className="w-screen min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
-        <div className="relative py-3 sm:max-w-xs sm:mx-auto">
-          <form className="min-h-96 px-8 py-6 mt-4 text-left bg-white  rounded-xl shadow-lg" onSubmit={handleSubmit}>
-            <div className="flex flex-col justify-center items-center h-full select-none">
-              <div className="flex flex-col items-center justify-center gap-2 mb-8">
-                <a href="https://amethgalarcio.web.app/" target="_blank">
-                  <img
-                    src="https://avatars.githubusercontent.com/u/77118609?s=400&u="
-                    className="w-8"
-                  />
-                </a>
-                <p className="m-0 text-[16px] font-semibold">
-                  Login to your Account
-                </p>
-                <span className="m-0 text-xs max-w-[90%] text-center text-[#8B8E98]">
-                  Get started with our app, just start section and enjoy
-                  experience.
-                </span>
-              </div>
-              <div className="w-full flex flex-col gap-2">
-                <label className="font-semibold text-xs text-gray-400 ">
-                  Email
-                </label>
-                <input
-                  className="border rounded-lg px-3 py-2 mb-5 text-sm w-full outline-none"
-                  placeholder="Email Adress"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="off"
+      <div className="w-screen min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div className="relative py-6 sm:max-w-md w-full">
+          {/* Login Form */}
+          <form
+            className="px-8 py-10 bg-white rounded-2xl shadow-xl transform transition-all hover:shadow-2xl"
+            onSubmit={handleSubmit}
+          >
+            {/* Logo and Heading */}
+            <div className="flex flex-col items-center gap-3 mb-8">
+              <a href="https://amethgalarcio.web.app/" target="_blank">
+                <img
+                  src="https://avatars.githubusercontent.com/u/77118609?s=400&u="
+                  className="w-10 h-10 rounded-full"
+                  alt="Logo"
                 />
-              </div>
+              </a>
+              <h2 className="text-2xl font-extrabold text-gray-800">
+                Welcome Back
+              </h2>
+              <p className="text-sm text-gray-500 text-center max-w-xs">
+                Get started with our app. Log in to enjoy a seamless experience.
+              </p>
             </div>
-            <div className="w-full flex flex-col gap-2">
-              <label className="font-semibold text-xs text-gray-400 ">
+
+            {/* Email Input */}
+            <div className="flex flex-col gap-1 mb-6">
+              <label className="font-semibold text-gray-600 text-xs">
+                Email
+              </label>
+              <input
+                type="email"
+                className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="off"
+              />
+            </div>
+
+            {/* Password Input */}
+            <div className="flex flex-col gap-1 mb-6">
+              <label className="font-semibold text-gray-600 text-xs">
                 Password
               </label>
               <input
                 type="password"
-                className="border rounded-lg px-3 py-2 mb-5 text-sm w-full outline-none"
+                className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -75,12 +83,29 @@ export default function LoginPage() {
                 autoComplete="off"
               />
             </div>
-            <div className="mt-5">
-              <button className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">
+
+            {/* Login Button */}
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+              >
                 Login
               </button>
             </div>
-            <a href="/register" className="text-xs text-blue-500 hover:underline">You don't have an account ?</a>
+
+            {/* Register Link */}
+            <div className="text-center mt-4">
+              <p className="text-xs text-gray-600">
+                Don’t have an account?{" "}
+                <a
+                  href="/register"
+                  className="text-blue-500 hover:underline transition-all"
+                >
+                  Register here
+                </a>
+              </p>
+            </div>
           </form>
         </div>
       </div>

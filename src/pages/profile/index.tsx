@@ -113,120 +113,136 @@ export default function ProfilePage() {
   };
 
   if (loading) return <p className="text-center">Loading...</p>;
-  if (error) return <p className="text-center text-red-500 font-semibold">{error}</p>;
+  if (error)
+    return <p className="text-center text-red-500 font-semibold">{error}</p>;
 
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 p-6">
-        <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Profile</h1>
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 w-full">
+        <h1 className="text-4xl font-extrabold text-gray-800 mb-8 text-center">
+          Profile
+        </h1>
 
-          {user && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Profilename
-                </label>
-                {editMode ? (
-                  <input
-                    type="text"
-                    value={updatedUser?.profilename || ""}
-                    onChange={(e) =>
-                      handleInputChange("profilename", e.target.value)
-                    }
-                    className="border rounded-md p-2 w-full"
-                  />
-                ) : (
-                  <p className="text-lg">{user.profilename}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Email
-                </label>
-                {editMode ? (
-                  <input
-                    type="email"
-                    value={updatedUser?.email || ""}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="border rounded-md p-2 w-full"
-                  />
-                ) : (
-                  <p className="text-lg">{user.email}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Business
-                </label>
-                {editMode ? (
-                  <input
-                    type="text"
-                    value={updatedUser?.business || ""}
-                    onChange={(e) =>
-                      handleInputChange("business", e.target.value)
-                    }
-                    className="border rounded-md p-2 w-full"
-                  />
-                ) : (
-                  <p className="text-lg">{user.business}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Phone
-                </label>
-                {editMode ? (
-                  <input
-                    type="tel"
-                    value={updatedUser?.phone || ""}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    className="border rounded-md p-2 w-full"
-                  />
-                ) : (
-                  <p className="text-lg">{user.phone}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Role
-                </label>
-                <p className="text-lg">{user.role}</p>
-              </div>
-
-              <div className="space-x-4">
-                {editMode ? (
-                  <>
-                    <button
-                      onClick={saveChanges}
-                      className="px-4 py-2 bg-green-500 text-white rounded-md"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setEditMode(true)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                  >
-                    Edit Profile
-                  </button>
-                )}
-              </div>
+        {/* Profile Details */}
+        {user && (
+          <div className="space-y-8">
+            {/* Profilename */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Profilename
+              </label>
+              {editMode ? (
+                <input
+                  type="text"
+                  value={updatedUser?.profilename || ""}
+                  onChange={(e) =>
+                    handleInputChange("profilename", e.target.value)
+                  }
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              ) : (
+                <p className="text-lg font-medium text-gray-700">
+                  {user.profilename}
+                </p>
+              )}
             </div>
-          )}
-        </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Email
+              </label>
+              {editMode ? (
+                <input
+                  type="email"
+                  value={updatedUser?.email || ""}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              ) : (
+                <p className="text-lg font-medium text-gray-700">
+                  {user.email}
+                </p>
+              )}
+            </div>
+
+            {/* Business */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Business
+              </label>
+              {editMode ? (
+                <input
+                  type="text"
+                  value={updatedUser?.business || ""}
+                  onChange={(e) =>
+                    handleInputChange("business", e.target.value)
+                  }
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              ) : (
+                <p className="text-lg font-medium text-gray-700">
+                  {user.business}
+                </p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Phone
+              </label>
+              {editMode ? (
+                <input
+                  type="tel"
+                  value={updatedUser?.phone || ""}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              ) : (
+                <p className="text-lg font-medium text-gray-700">
+                  {user.phone}
+                </p>
+              )}
+            </div>
+
+            {/* Role */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Role
+              </label>
+              <p className="text-lg font-medium text-gray-700">{user.role}</p>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex justify-end space-x-4">
+              {editMode ? (
+                <>
+                  <button
+                    onClick={saveChanges}
+                    className="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={cancelEdit}
+                    className="px-6 py-2 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setEditMode(true)}
+                  className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition"
+                >
+                  Edit Profile
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

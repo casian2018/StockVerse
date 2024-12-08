@@ -50,106 +50,139 @@ export default function RegisterPage() {
 
   return (
     <>
-      <div className="w-screen min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
-        <div className="relative py-3 sm:max-w-xs sm:mx-auto">
+      <div className="w-screen min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div className="relative py-6 sm:max-w-md w-full">
+          {/* Form Container */}
           <form
-            className="min-h-96 px-8 py-6 mt-4 text-left bg-white  rounded-xl shadow-lg"
+            className="bg-white px-8 py-8 rounded-2xl shadow-lg transition-all hover:shadow-2xl"
             onSubmit={handleSubmit}
           >
-            <div className="flex flex-col justify-center items-center h-full select-none">
-              <div className="flex flex-col items-center justify-center gap-2 mb-8">
-                <a href="https://amethgalarcio.web.app/" target="_blank">
-                  <img
-                    src="https://avatars.githubusercontent.com/u/77118609?s=400&u="
-                    className="w-8"
-                  />
-                </a>
-                <p className="m-0 text-[16px] font-semibold">
-                  Login to your Account
-                </p>
-                <span className="m-0 text-xs max-w-[90%] text-center text-[#8B8E98]">
-                  Get started with our app, just start section and enjoy
-                  experience.
-                </span>
-              </div>
-              <div className="w-full flex flex-col gap-2">
-                <label className="font-semibold text-xs text-gray-400 ">
+            {/* Header Section */}
+            <div className="flex flex-col items-center gap-3 mb-6">
+              <a
+                href="https://amethgalarcio.web.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src="https://avatars.githubusercontent.com/u/77118609?s=400&u="
+                  alt="Logo"
+                  className="w-12 h-12 rounded-full shadow-sm"
+                />
+              </a>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Create an Account
+              </h2>
+              <p className="text-sm text-gray-500 text-center max-w-xs">
+                Start managing your business and join us today!
+              </p>
+            </div>
+
+            {/* Input Fields */}
+            <div className="flex flex-col gap-4 mb-4">
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
                   Email
                 </label>
                 <input
-                    name="email"
-                  className="border rounded-lg px-3 py-2 mb-5 text-sm w-full outline-none"
-                  placeholder="Email Adress"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   value={formData.email}
                   onChange={handleChange}
                   required
                   autoComplete="email"
                 />
               </div>
+
+              {/* Name */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="profilename"
+                  placeholder="Enter your name"
+                  className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  value={formData.profilename}
+                  onChange={handleChange}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+
+              {/* Business */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Business
+                </label>
+                <input
+                  type="text"
+                  name="busniess"
+                  placeholder="Your business name"
+                  className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  value={formData.busniess}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Enter your phone number"
+                  className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="w-full flex flex-col gap-2">
-              <label className="font-semibold text-xs text-gray-400 ">
-                Name
-              </label>
-              <input
-                name="profilename"
-                className="border rounded-lg px-3 py-2 mb-5 text-sm w-full outline-none"
-                placeholder="Name"
-                value={formData.profilename}
-                onChange={handleChange}
-                required
-                autoComplete="off"
-              />
-            </div>
-
-            <div className="w-full flex flex-col gap-2">
-              <label className="font-semibold text-xs text-gray-400 ">
-                Business
-              </label>
-              <input
-                name="busniess"
-                className="border rounded-lg px-3 py-2 mb-5 text-sm w-full outline-none"
-                placeholder="Business"
-                value={formData.busniess}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="w-full flex flex-col gap-2">
-              <label className="font-semibold text-xs text-gray-400 ">
-                Phone
-              </label>
-              <input
-                name="phone"
-                className="border rounded-lg px-3 py-2 mb-5 text-sm w-full outline-none"
-                placeholder="Phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="w-full flex flex-col gap-2">
-              <label className="font-semibold text-xs text-gray-400 ">
-                Password
-              </label>
-              <input
-                type="password"
-                className="border rounded-lg px-3 py-2 mb-5 text-sm w-full outline-none"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                name="password"
-                required
-              />
-            </div>
-            <div className="mt-5">
-              <button type="submit" className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">
-                Login
+            {/* Submit Button */}
+            <div className="mt-4">
+              <button
+                type="submit"
+                className="w-full py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-300"
+              >
+                Register
               </button>
             </div>
+
+            {/* Login Redirect */}
+            <p className="text-center text-sm text-gray-600 mt-4">
+              Already have an account?{" "}
+              <a
+                href="/login"
+                className="text-blue-500 hover:underline font-semibold"
+              >
+                Login here
+              </a>
+            </p>
           </form>
         </div>
       </div>

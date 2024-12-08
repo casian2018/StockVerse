@@ -96,8 +96,11 @@ export default function PersonalPage() {
         body: JSON.stringify(editingPerson),
       });
       if (!response.ok) throw new Error();
-      setPerson((prev) =>
-        prev?.map((p) => (p.email === editingPerson.email ? editingPerson : p)) || []
+      setPerson(
+        (prev) =>
+          prev?.map((p) =>
+            p.email === editingPerson.email ? editingPerson : p
+          ) || []
       );
       setEditingPerson(null);
     } catch {
@@ -114,69 +117,87 @@ export default function PersonalPage() {
       <main className="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all px-8 py-4">
         <h1 className="text-3xl font-bold py-4">Personal</h1>
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold">Add New Person</h2>
+        {/* Add New Person Form */}
+        <div className="mb-8 p-4 bg-white rounded-lg shadow">
+          <h2 className="text-2xl font-semibold mb-4">Add New Person</h2>
           <form
             onSubmit={(e) => {
               e.preventDefault();
               addPerson();
             }}
+            className="flex flex-wrap gap-4"
           >
             <input
               type="text"
               placeholder="Legal Name"
               value={newPerson.legalname}
-              onChange={(e) => setNewPerson({ ...newPerson, legalname: e.target.value })}
-              className="border p-2 mr-4"
+              onChange={(e) =>
+                setNewPerson({ ...newPerson, legalname: e.target.value })
+              }
+              className="border p-2 rounded w-full md:w-[24%]"
               required
             />
             <input
               type="email"
               placeholder="Email"
               value={newPerson.email}
-              onChange={(e) => setNewPerson({ ...newPerson, email: e.target.value })}
-              className="border p-2 mr-4"
+              onChange={(e) =>
+                setNewPerson({ ...newPerson, email: e.target.value })
+              }
+              className="border p-2 rounded w-full md:w-[24%]"
               required
             />
             <input
               type="text"
               placeholder="Role"
               value={newPerson.role}
-              onChange={(e) => setNewPerson({ ...newPerson, role: e.target.value })}
-              className="border p-2 mr-4"
+              onChange={(e) =>
+                setNewPerson({ ...newPerson, role: e.target.value })
+              }
+              className="border p-2 rounded w-full md:w-[24%]"
               required
             />
             <input
               type="text"
               placeholder="Phone Number"
               value={newPerson.phone}
-              onChange={(e) => setNewPerson({ ...newPerson, phone: e.target.value })}
-              className="border p-2 mr-4"
+              onChange={(e) =>
+                setNewPerson({ ...newPerson, phone: e.target.value })
+              }
+              className="border p-2 rounded w-full md:w-[24%]"
               required
             />
-            <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-all"
+            >
               Add Person
             </button>
           </form>
         </div>
 
+        {/* Edit Person Form */}
         {editingPerson && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold">Edit Person</h2>
+          <div className="mb-8 p-4 bg-white rounded-lg shadow">
+            <h2 className="text-2xl font-semibold mb-4">Edit Person</h2>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 editPerson();
               }}
+              className="flex flex-wrap gap-4"
             >
               <input
                 type="text"
                 placeholder="Legal Name"
                 value={editingPerson.legalname}
                 onChange={(e) =>
-                  setEditingPerson({ ...editingPerson, legalname: e.target.value })
+                  setEditingPerson({
+                    ...editingPerson,
+                    legalname: e.target.value,
+                  })
                 }
-                className="border p-2 mr-4"
+                className="border p-2 rounded w-full md:w-[24%]"
                 required
               />
               <input
@@ -186,7 +207,7 @@ export default function PersonalPage() {
                 onChange={(e) =>
                   setEditingPerson({ ...editingPerson, email: e.target.value })
                 }
-                className="border p-2 mr-4"
+                className="border p-2 rounded w-full md:w-[24%]"
                 required
               />
               <input
@@ -196,7 +217,7 @@ export default function PersonalPage() {
                 onChange={(e) =>
                   setEditingPerson({ ...editingPerson, role: e.target.value })
                 }
-                className="border p-2 mr-4"
+                className="border p-2 rounded w-full md:w-[24%]"
                 required
               />
               <input
@@ -206,16 +227,19 @@ export default function PersonalPage() {
                 onChange={(e) =>
                   setEditingPerson({ ...editingPerson, phone: e.target.value })
                 }
-                className="border p-2 mr-4"
+                className="border p-2 rounded w-full md:w-[24%]"
                 required
               />
-              <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all"
+              >
                 Save Changes
               </button>
               <button
                 type="button"
                 onClick={() => setEditingPerson(null)}
-                className="ml-2 px-4 py-2 bg-gray-500 text-white rounded"
+                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500 transition-all"
               >
                 Cancel
               </button>
@@ -223,44 +247,49 @@ export default function PersonalPage() {
           </div>
         )}
 
+        {/* Table */}
         {person && person.length > 0 ? (
-          <table className="table-auto w-full">
-            <thead>
-              <tr>
-                <th>Legal Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Phone</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {person.map((p) => (
-                <tr key={p.email}>
-                  <td>{p.legalname}</td>
-                  <td>{p.email}</td>
-                  <td>{p.role}</td>
-                  <td>{p.phone}</td>
-                  <td>
-                    <button
-                      onClick={() => setEditingPerson(p)}
-                      className="px-2 py-1 bg-blue-500 text-white rounded mr-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => deletePerson(p.email)}
-                      className="px-2 py-1 bg-red-500 text-white rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
+          <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <table className="table-auto w-full">
+              <thead>
+                <tr className="bg-gray-200 text-left text-gray-600 text-sm">
+                  <th className="p-4">Legal Name</th>
+                  <th className="p-4">Email</th>
+                  <th className="p-4">Role</th>
+                  <th className="p-4">Phone</th>
+                  <th className="p-4">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {person.map((p) => (
+                  <tr key={p.email} className="border-t hover:bg-gray-100">
+                    <td className="p-4">{p.legalname}</td>
+                    <td className="p-4">{p.email}</td>
+                    <td className="p-4">{p.role}</td>
+                    <td className="p-4">{p.phone}</td>
+                    <td className="p-4 flex gap-2">
+                      <button
+                        onClick={() => setEditingPerson(p)}
+                        className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => deletePerson(p.email)}
+                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
-          <p className="text-center">No personal data available.</p>
+          <p className="text-center text-gray-500 py-8">
+            No personal data available.
+          </p>
         )}
       </main>
     </div>
