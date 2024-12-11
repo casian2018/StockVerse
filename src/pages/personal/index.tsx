@@ -9,6 +9,9 @@ interface Personal {
   email: string;
   role: string;
   phone: string;
+  salary: number;
+  startDate: string;
+  age: number;
 }
 
 export default function PersonalPage() {
@@ -22,6 +25,9 @@ export default function PersonalPage() {
     email: "",
     role: "",
     phone: "",
+    salary: 0,
+    startDate: "",
+    age: 0,
   });
   const [editingPerson, setEditingPerson] = useState<Personal | null>(null);
 
@@ -81,7 +87,15 @@ export default function PersonalPage() {
       });
       if (!response.ok) throw new Error();
       setPerson((prev) => (prev ? [...prev, newPerson] : [newPerson]));
-      setNewPerson({ legalname: "", email: "", role: "", phone: "" });
+      setNewPerson({
+        legalname: "",
+        email: "",
+        role: "",
+        phone: "",
+        salary: 0,
+        startDate: "",
+        age: 0,
+      });
     } catch {
       setError("Failed to add person");
     }
@@ -127,46 +141,97 @@ export default function PersonalPage() {
             }}
             className="flex flex-wrap gap-4"
           >
-            <input
-              type="text"
-              placeholder="Legal Name"
-              value={newPerson.legalname}
-              onChange={(e) =>
-                setNewPerson({ ...newPerson, legalname: e.target.value })
-              }
-              className="border p-2 rounded w-full md:w-[24%]"
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              value={newPerson.email}
-              onChange={(e) =>
-                setNewPerson({ ...newPerson, email: e.target.value })
-              }
-              className="border p-2 rounded w-full md:w-[24%]"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Role"
-              value={newPerson.role}
-              onChange={(e) =>
-                setNewPerson({ ...newPerson, role: e.target.value })
-              }
-              className="border p-2 rounded w-full md:w-[24%]"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Phone Number"
-              value={newPerson.phone}
-              onChange={(e) =>
-                setNewPerson({ ...newPerson, phone: e.target.value })
-              }
-              className="border p-2 rounded w-full md:w-[24%]"
-              required
-            />
+            <label className="w-full md:w-[24%]">
+              Legal Name
+              <input
+                type="text"
+                placeholder="Legal Name"
+                value={newPerson.legalname}
+                onChange={(e) =>
+                  setNewPerson({ ...newPerson, legalname: e.target.value })
+                }
+                className="border p-2 rounded w-full"
+                required
+              />
+            </label>
+            <label className="w-full md:w-[24%]">
+              Email
+              <input
+                type="email"
+                placeholder="Email"
+                value={newPerson.email}
+                onChange={(e) =>
+                  setNewPerson({ ...newPerson, email: e.target.value })
+                }
+                className="border p-2 rounded w-full"
+                required
+              />
+            </label>
+            <label className="w-full md:w-[24%]">
+              Role
+              <input
+                type="text"
+                placeholder="Role"
+                value={newPerson.role}
+                onChange={(e) =>
+                  setNewPerson({ ...newPerson, role: e.target.value })
+                }
+                className="border p-2 rounded w-full"
+                required
+              />
+            </label>
+            <label className="w-full md:w-[24%]">
+              Phone Number
+              <input
+                type="text"
+                placeholder="Phone Number"
+                value={newPerson.phone}
+                onChange={(e) =>
+                  setNewPerson({ ...newPerson, phone: e.target.value })
+                }
+                className="border p-2 rounded w-full"
+                required
+              />
+            </label>
+            <label className="w-full md:w-[24%]">
+              Salary
+              <input
+                type="number"
+                placeholder="Salary"
+                value={newPerson.salary}
+                onChange={(e) =>
+                  setNewPerson({ ...newPerson, salary: Number(e.target.value) })
+                }
+                className="border p-2 rounded w-full"
+                required
+              />
+            </label>
+            <label className="w-full md:w-[24%]">
+              Start Date
+              <input
+                type="date"
+                placeholder="Start Date"
+                value={newPerson.startDate}
+                onChange={(e) =>
+                  setNewPerson({ ...newPerson, startDate: e.target.value })
+                }
+                className="border p-2 rounded w-full"
+                required
+              />
+            </label>
+            <label className="w-full md:w-[24%]">
+              Age
+              <input
+                type="number"
+                placeholder="Age"
+                value={newPerson.age}
+                onChange={(e) =>
+                  setNewPerson({ ...newPerson, age: Number(e.target.value) })
+                }
+                className="border p-2 rounded w-full"
+                required
+              />
+            </label>
             <button
               type="submit"
               className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-all"
@@ -187,49 +252,109 @@ export default function PersonalPage() {
               }}
               className="flex flex-wrap gap-4"
             >
-              <input
-                type="text"
-                placeholder="Legal Name"
-                value={editingPerson.legalname}
-                onChange={(e) =>
-                  setEditingPerson({
-                    ...editingPerson,
-                    legalname: e.target.value,
-                  })
-                }
-                className="border p-2 rounded w-full md:w-[24%]"
-                required
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={editingPerson.email}
-                onChange={(e) =>
-                  setEditingPerson({ ...editingPerson, email: e.target.value })
-                }
-                className="border p-2 rounded w-full md:w-[24%]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Role"
-                value={editingPerson.role}
-                onChange={(e) =>
-                  setEditingPerson({ ...editingPerson, role: e.target.value })
-                }
-                className="border p-2 rounded w-full md:w-[24%]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Phone Number"
-                value={editingPerson.phone}
-                onChange={(e) =>
-                  setEditingPerson({ ...editingPerson, phone: e.target.value })
-                }
-                className="border p-2 rounded w-full md:w-[24%]"
-                required
-              />
+              <label className="w-full md:w-[24%]">
+                Legal Name
+                <input
+                  type="text"
+                  placeholder="Legal Name"
+                  value={editingPerson.legalname}
+                  onChange={(e) =>
+                    setEditingPerson({
+                      ...editingPerson,
+                      legalname: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                  required
+                />
+              </label>
+              <label className="w-full md:w-[24%]">
+                Email
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={editingPerson.email}
+                  onChange={(e) =>
+                    setEditingPerson({ ...editingPerson, email: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                  required
+                />
+              </label>
+              <label className="w-full md:w-[24%]">
+                Role
+                <input
+                  type="text"
+                  placeholder="Role"
+                  value={editingPerson.role}
+                  onChange={(e) =>
+                    setEditingPerson({ ...editingPerson, role: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                  required
+                />
+              </label>
+              <label className="w-full md:w-[24%]">
+                Phone Number
+                <input
+                  type="text"
+                  placeholder="Phone Number"
+                  value={editingPerson.phone}
+                  onChange={(e) =>
+                    setEditingPerson({ ...editingPerson, phone: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                  required
+                />
+              </label>
+              <label className="w-full md:w-[24%]">
+                Salary
+                <input
+                  type="number"
+                  placeholder="Salary"
+                  value={editingPerson.salary}
+                  onChange={(e) =>
+                    setEditingPerson({
+                      ...editingPerson,
+                      salary: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                  required
+                />
+              </label>
+              <label className="w-full md:w-[24%]">
+                Start Date
+                <input
+                  type="date"
+                  placeholder="Start Date"
+                  value={editingPerson.startDate}
+                  onChange={(e) =>
+                    setEditingPerson({
+                      ...editingPerson,
+                      startDate: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                  required
+                />
+              </label>
+              <label className="w-full md:w-[24%]">
+                Age
+                <input
+                  type="number"
+                  placeholder="Age"
+                  value={editingPerson.age}
+                  onChange={(e) =>
+                    setEditingPerson({
+                      ...editingPerson,
+                      age: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                  required
+                />
+              </label>
               <button
                 type="submit"
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all"
@@ -257,6 +382,9 @@ export default function PersonalPage() {
                   <th className="p-4">Email</th>
                   <th className="p-4">Role</th>
                   <th className="p-4">Phone</th>
+                  <th className="p-4">Salary</th>
+                  <th className="p-4">Start Date</th>
+                  <th className="p-4">Age</th>
                   <th className="p-4">Actions</th>
                 </tr>
               </thead>
@@ -267,6 +395,9 @@ export default function PersonalPage() {
                     <td className="p-4">{p.email}</td>
                     <td className="p-4">{p.role}</td>
                     <td className="p-4">{p.phone}</td>
+                    <td className="p-4">{p.salary}</td>
+                    <td className="p-4">{p.startDate}</td>
+                    <td className="p-4">{p.age}</td>
                     <td className="p-4 flex gap-2">
                       <button
                         onClick={() => setEditingPerson(p)}
