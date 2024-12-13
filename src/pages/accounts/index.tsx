@@ -16,10 +16,9 @@ export default function AccountsPage() {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [accounts, setAccounts] = useState<Account[] | null>(null);
-    const [newAccount, setNewAccount] = useState<Account>({
+    const [newAccount, setNewAccount] = useState<Omit<Account, "busniess">>({
         _id: "",
         email: "",
-        busniess: "",
     });
     const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
@@ -78,18 +77,18 @@ export default function AccountsPage() {
     };
 
     const addAccount = async () => {
+        if (!user) return;
         try {
             const response = await fetch("/api/addAccount", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newAccount),
+                body: JSON.stringify({ ...newAccount, busniess: user.busniess }),
             });
             if (!response.ok) throw new Error();
-            setAccounts((prev) => (prev ? [...prev, newAccount] : [newAccount]));
+            setAccounts((prev) => (prev ? [...prev, { ...newAccount, busniess: user.busniess }] : [{ ...newAccount, busniess: user.busniess }]));
             setNewAccount({
                 _id: "",
                 email: "",
-                busniess: "",
             });
         } catch {
             setError("Failed to add account");
@@ -149,19 +148,6 @@ export default function AccountsPage() {
                                 required
                             />
                         </label>
-                        <label className="w-full md:w-[24%]">
-                            Business
-                            <input
-                                type="text"
-                                placeholder="Business"
-                                value={newAccount.busniess}
-                                onChange={(e) =>
-                                    setNewAccount({ ...newAccount, busniess: e.target.value })
-                                }
-                                className="border p-2 rounded w-full"
-                                required
-                            />
-                        </label>
                         <button
                             type="submit"
                             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-all"
@@ -192,22 +178,6 @@ export default function AccountsPage() {
                                         setEditingAccount({
                                             ...editingAccount,
                                             email: e.target.value,
-                                        })
-                                    }
-                                    className="border p-2 rounded w-full"
-                                    required
-                                />
-                            </label>
-                            <label className="w-full md:w-[24%]">
-                                Business
-                                <input
-                                    type="text"
-                                    placeholder="Business"
-                                    value={editingAccount.busniess}
-                                    onChange={(e) =>
-                                        setEditingAccount({
-                                            ...editingAccount,
-                                            busniess: e.target.value,
                                         })
                                     }
                                     className="border p-2 rounded w-full"

@@ -8,7 +8,6 @@ export default function Sidebar() {
       try {
         const response = await fetch('/api/getUserInfo');
         const data = await response.json();
-        console.log('User role:', data.role); // Log the user's role
         if (data.role === 'Admin') {
           setIsAdmin(true);
         } else {
