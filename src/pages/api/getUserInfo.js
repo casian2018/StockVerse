@@ -29,6 +29,7 @@ export default async function handler(req, res) {
     const legalnames = user.personal?.map((person) => person.legalname) || [];
     const business = user.business;
     const role = user.role;
+    const contact = user.contact;
 
     res.status(200).json({ ...user, legalnames });
   } catch (error) {

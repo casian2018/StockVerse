@@ -8,6 +8,8 @@ interface Account {
     _id: string;
     email: string;
     busniess: string;
+    role: string;
+    password?: string;
 }
 
 export default function AccountsPage() {
@@ -16,28 +18,47 @@ export default function AccountsPage() {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [accounts, setAccounts] = useState<Account[] | null>(null);
-    const [newAccount, setNewAccount] = useState<Omit<Account, "busniess">>({
-        _id: "",
+    const [newAccount, setNewAccount] = useState<Omit<Account, "busniess" | "_id">>({
         email: "",
+        role: "",
+        password: "",
     });
     const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
     useEffect(() => {
         const checkAuth = async () => {
-            try {
-                const response = await fetch("/api/checkAuth");
-                if (!response.ok) throw new Error("Not authenticated");
-                const userData = await response.json();
-                setUser(userData);
-            } catch {
-                setError("You need to log in.");
-                router.push("/login");
-            } finally {
-                setLoading(false);
-            }
+          try {
+            const response = await fetch("/api/checkAuth");
+            if (!response.ok) throw new Error("Not authenticated");
+            const userData = await response.json();
+            setUser(userData);
+          } catch {
+            setError("You need to log in.");
+            router.push("/login");
+          } finally {
+            setLoading(false);
+          }
         };
         checkAuth();
-    }, [router]);
+      }, [router]);
+
+      async function createAccount(email: any, role: any, password: any) {
+        const response = await fetch('/api/addAccount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, role, password }),
+        });
+    
+        const data = await response.json();
+        if (response.ok) {
+            console.log('Account created successfully:', data);
+        } else {
+            console.error('Failed to create account:', data);
+        }
+    }
+    
 
     useEffect(() => {
         const fetchAccountsData = async () => {
@@ -76,24 +97,6 @@ export default function AccountsPage() {
         }
     };
 
-    const addAccount = async () => {
-        if (!user) return;
-        try {
-            const response = await fetch("/api/addAccount", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...newAccount, busniess: user.busniess }),
-            });
-            if (!response.ok) throw new Error();
-            setAccounts((prev) => (prev ? [...prev, { ...newAccount, busniess: user.busniess }] : [{ ...newAccount, busniess: user.busniess }]));
-            setNewAccount({
-                _id: "",
-                email: "",
-            });
-        } catch {
-            setError("Failed to add account");
-        }
-    };
 
     const editAccount = async () => {
         if (!editingAccount) return;
@@ -131,7 +134,7 @@ export default function AccountsPage() {
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
-                            addAccount();
+                            createAccount(newAccount.email, newAccount.role, newAccount.password);
                         }}
                         className="flex flex-wrap gap-4"
                     >
@@ -143,6 +146,33 @@ export default function AccountsPage() {
                                 value={newAccount.email}
                                 onChange={(e) =>
                                     setNewAccount({ ...newAccount, email: e.target.value })
+                                }
+                                className="border p-2 rounded w-full"
+                                required
+                            />
+                        </label>
+                        <label className="w-full md:w-[24%]">
+                            Role
+                            <select
+                                value={newAccount.role}
+                                onChange={(e) =>
+                                    setNewAccount({ ...newAccount, role: e.target.value })
+                                }
+                                className="border p-2 rounded w-full"
+                                required
+                            >
+                                <option value="Guest">Guest</option>
+                                <option value="Manager">Manager</option>
+                            </select>
+                        </label>
+                        <label className="w-full md:w-[24%]">
+                            Password
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                value={newAccount.password}
+                                onChange={(e) =>
+                                    setNewAccount({ ...newAccount, password: e.target.value })
                                 }
                                 className="border p-2 rounded w-full"
                                 required
@@ -184,6 +214,24 @@ export default function AccountsPage() {
                                     required
                                 />
                             </label>
+                            <label className="w-full md:w-[24%]">
+                                Role
+                                <select
+                                    value={editingAccount.role}
+                                    onChange={(e) =>
+                                        setEditingAccount({
+                                            ...editingAccount,
+                                            role: e.target.value,
+                                        })
+                                    }
+                                    className="border p-2 rounded w-full"
+                                    required
+                                >
+                                    <option value="Guest">Guest</option>
+                                    <option value="Manager">Manager</option>
+                                    </select>
+                            </label>
+                            <label className="w-full md:w-[24%]"></label>
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all"
@@ -208,6 +256,7 @@ export default function AccountsPage() {
                             <thead>
                                 <tr className="bg-gray-200 text-left text-gray-600 text-sm">
                                     <th className="p-4">Email</th>
+                                    <th className="p-4">Role</th>
                                     <th className="p-4">Actions</th>
                                 </tr>
                             </thead>
@@ -215,6 +264,7 @@ export default function AccountsPage() {
                                 {accounts.map((a) => (
                                     <tr key={a._id} className="border-t hover:bg-gray-100">
                                         <td className="p-4">{a.email}</td>
+                                        <td className="p-4">{a.role}</td>
                                         <td className="p-4 flex gap-2">
                                             <button
                                                 onClick={() => setEditingAccount(a)}

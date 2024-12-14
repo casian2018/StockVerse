@@ -8,7 +8,7 @@ export default function RegisterPage() {
     email: "",
     password: "",
     profilename: "",
-    busniess: "",
+    business: "",
     phone: "",
   });
 
@@ -35,13 +35,17 @@ export default function RegisterPage() {
           email: "",
           password: "",
           profilename: "",
-          busniess: "",
+          business: "",
           phone: "",
         });
         router.push("/login");
       } else {
         const errorData = await response.json();
-        alert(`Registration failed: ${errorData.error}`);
+        if (errorData.error === "Business name already exists") {
+          alert("A business with this name already exists. Please choose a different name.");
+        } else {
+          alert(`Registration failed: ${errorData.error}`);
+        }
       }
     } catch (error) {
       console.error("Error registering user:", error);
@@ -121,10 +125,10 @@ export default function RegisterPage() {
                 </label>
                 <input
                   type="text"
-                  name="busniess"
+                  name="business"
                   placeholder="Your business name"
                   className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-                  value={formData.busniess}
+                  value={formData.business}
                   onChange={handleChange}
                   required
                 />

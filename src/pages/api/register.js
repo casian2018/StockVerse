@@ -6,9 +6,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { email, password, profilename, busniess, phone } = req.body;
+  const { email, password, profilename, business, phone } = req.body;
 
-  if (!email || !password) {
+  if (!email || !password || !business) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -22,15 +22,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'User already exists' });
     }
 
+    const businessExists = await users.findOne({ business });
+    if (businessExists) {
+      return res.status(400).json({ error: 'Business already exists' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await users.insertOne({
       email,
       profilename,
-      busniess,
+      business,
       phone,
       password: hashedPassword,
-      role : "Admin",
+      role: "Admin",
     });
 
     res.status(201).json({ message: 'User registered successfully' });
