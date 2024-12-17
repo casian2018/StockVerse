@@ -1,114 +1,233 @@
 "use client";
 
-import { useRouter } from "next/router";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function LoginPage() {
+  const [step, setStep] = useState<"email" | "password" | "setup" | "register">(
+    "email"
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hasPassword, setHasPassword] = useState(false);
+  const [profilename, setProfilename] = useState("");
+  const [business, setBusiness] = useState("");
+  const [phone, setPhone] = useState("");
+
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch("/api/login", {
+  // Handle Email Check
+  const checkEmail = async () => {
+    const res = await fetch("/api/checkEmail", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
     });
-    const data = await res.json();
 
-    if (res.ok) {
-      localStorage.setItem("token", data.token);
-      router.push("/dash");
+    const data = await res.json();
+    if (data.exists) {
+      if (data.hasPassword) {
+        setStep("password");
+      } else {
+        setStep("setup");
+      }
     } else {
-      alert(data.error);
+      setStep("register");
     }
   };
+
+  // Handle Login
+  const handleLogin = async () => {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (res.ok) {
+      router.push("/dash");
+    } else {
+      alert("Invalid credentials!");
+    }
+  };
+
+  // Handle Password Setup
+  const handleSetupPassword = async () => {
+    const res = await fetch("/api/setupPassword", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (res.ok) {
+      alert("Password set successfully!");
+      setStep("password");
+    } else {
+      alert("Failed to set password.");
+    }
+  };
+
+  // Handle Registration
+  const handleRegister = async () => {
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+        profilename,
+        business,
+        phone,
+      }),
+    });
+
+    if (res.ok) {
+      alert("Registration successful!");
+      setStep("password");
+    } else {
+      alert("Registration failed!");
+    }
+  };
+
   return (
-    <>
-      <div className="w-screen min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
-        <div className="relative py-6 sm:max-w-md w-full">
-          {/* Login Form */}
-          <form
-            className="px-8 py-10 bg-white rounded-2xl shadow-xl transform transition-all hover:shadow-2xl"
-            onSubmit={handleSubmit}
+    <div className="w-screen min-h-screen flex items-center justify-center bg-indigo-50 px-4">
+  <div className="py-6 sm:max-w-md w-full">
+    <form
+      className="px-8 py-10 bg-white rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-500"
+      onSubmit={(e) => e.preventDefault()}
+    >
+      {/* Step Header */}
+      <h2 className="text-3xl font-extrabold text-center mb-6 text-indigo-700">
+        {step === "email"
+          ? "Welcome Back!"
+          : step === "password"
+          ? "Login"
+          : step === "setup"
+          ? "Set Up Your Password"
+          : "Register Your Account"}
+      </h2>
+      <p className="text-center text-gray-500 mb-6">
+        {step === "register"
+          ? "Get started with your business today!"
+          : "Please fill in the required details"}
+      </p>
+
+      {/* Email Step */}
+      {step === "email" && (
+        <>
+          <input
+            type="email"
+            placeholder="Your Email"
+            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button
+            className="w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-all duration-300"
+            onClick={checkEmail}
           >
-            {/* Logo and Heading */}
-            <div className="flex flex-col items-center gap-3 mb-8">
-              <a href="https://amethgalarcio.web.app/" target="_blank">
-                <img
-                  src="https://avatars.githubusercontent.com/u/77118609?s=400&u="
-                  className="w-10 h-10 rounded-full"
-                  alt="Logo"
-                />
-              </a>
-              <h2 className="text-2xl font-extrabold text-gray-800">
-                Welcome Back
-              </h2>
-              <p className="text-sm text-gray-500 text-center max-w-xs">
-                Get started with our app. Log in to enjoy a seamless experience.
-              </p>
-            </div>
+            Next
+          </button>
+        </>
+      )}
 
-            {/* Email Input */}
-            <div className="flex flex-col gap-1 mb-6">
-              <label className="font-semibold text-gray-600 text-xs">
-                Email
-              </label>
-              <input
-                type="email"
-                className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="off"
-              />
-            </div>
+      {/* Password Step */}
+      {step === "password" && (
+        <>
+          <input
+            type="password"
+            placeholder="Your Password"
+            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            className="w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-all duration-300"
+            onClick={handleLogin}
+          >
+            Login
+          </button>
+        </>
+      )}
 
-            {/* Password Input */}
-            <div className="flex flex-col gap-1 mb-6">
-              <label className="font-semibold text-gray-600 text-xs">
-                Password
-              </label>
-              <input
-                type="password"
-                className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="off"
-              />
-            </div>
+      {/* Password Setup */}
+      {step === "setup" && (
+        <>
+          <input
+            type="password"
+            placeholder="Set Password"
+            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            className="w-full py-2 bg-yellow-500 text-white font-bold rounded-lg hover:bg-yellow-600 transition-all duration-300"
+            onClick={handleSetupPassword}
+          >
+            Set Password
+          </button>
+        </>
+      )}
 
-            {/* Login Button */}
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-              >
-                Login
-              </button>
-            </div>
+      {/* Register Step */}
+      {step === "register" && (
+        <>
+          <input
+            type="text"
+            placeholder="Profile Name"
+            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+            value={profilename}
+            onChange={(e) => setProfilename(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Business Name"
+            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+            value={business}
+            onChange={(e) => setBusiness(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Phone"
+            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Create a Password"
+            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            className="w-full py-2 bg-yellow-500 text-white font-bold rounded-lg hover:bg-yellow-600 transition-all duration-300"
+            onClick={handleRegister}
+          >
+            Register
+          </button>
+        </>
+      )}
 
-            {/* Register Link */}
-            <div className="text-center mt-4">
-              <p className="text-xs text-gray-600">
-                Don’t have an account?{" "}
-                <a
-                  href="/register"
-                  className="text-blue-500 hover:underline transition-all"
-                >
-                  Register here
-                </a>
-              </p>
-            </div>
-          </form>
-        </div>
-      </div>
-    </>
+      {/* Footer */}
+      <p className="text-center text-gray-500 text-sm mt-6">
+        Need help?{" "}
+        <a
+          href="#"
+          className="text-indigo-600 font-semibold hover:underline"
+        >
+          Contact Support
+        </a>
+      </p>
+    </form>
+  </div>
+</div>
   );
 }

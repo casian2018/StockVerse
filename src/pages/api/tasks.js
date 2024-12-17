@@ -1,4 +1,7 @@
 import clientPromise from './mongodb';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function handler(req, res) {
   const client = await clientPromise;
@@ -7,14 +10,36 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
+      const token = req.cookies.token; // Get token from cookies
+      if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      // Verify and decode token to get user info
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const loggedInUser = await users.findOne(
+        { email: decoded.email },
+        { projection: { password: 0 } }
+      );
+
+      if (!loggedInUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Check role and filter tasks based on business
+      if (loggedInUser.role !== 'Admin') {
+        return res.status(403).json({ error: 'Access denied. Admins only.' });
+      }
+
       const allTasks = await users.aggregate([
+        { $match: { business: loggedInUser.business } },
         { $unwind: '$tasks' },
         { $replaceRoot: { newRoot: '$tasks' } }
       ]).toArray();
 
       // Check if all subtasks are completed and mark the task as completed or not
-      const updatedTasks = allTasks.map(task => {
-        if (task.subtasks && task.subtasks.every(subtask => subtask.completed)) {
+      const updatedTasks = allTasks.map((task) => {
+        if (task.subtasks && task.subtasks.every((subtask) => subtask.completed)) {
           task.completed = true;
         } else {
           task.completed = false;
@@ -30,7 +55,7 @@ export default async function handler(req, res) {
   } else if (req.method === 'POST') {
     try {
       const newTask = req.body;
-      const result = await users.updateOne(
+      await users.updateOne(
         { _id: newTask.userId },
         { $push: { tasks: newTask } }
       );
@@ -42,11 +67,11 @@ export default async function handler(req, res) {
   } else if (req.method === 'PUT') {
     try {
       const { userId, taskId, updatedTask } = req.body;
-      const result = await users.updateOne(
+      const updateResult = await users.updateOne(
         { _id: userId, 'tasks._id': taskId },
         { $set: { 'tasks.$': updatedTask } }
       );
-      if (result.modifiedCount === 0) {
+      if (updateResult.modifiedCount === 0) {
         return res.status(404).json({ error: 'Task not found' });
       }
       res.status(200).json(updatedTask);
@@ -57,11 +82,11 @@ export default async function handler(req, res) {
   } else if (req.method === 'DELETE') {
     try {
       const { userId, taskId } = req.body;
-      const result = await users.updateOne(
+      const deleteResult = await users.updateOne(
         { _id: userId },
         { $pull: { tasks: { _id: taskId } } }
       );
-      if (result.modifiedCount === 0) {
+      if (deleteResult.modifiedCount === 0) {
         return res.status(404).json({ error: 'Task not found' });
       }
       res.status(200).json({ message: 'Task deleted successfully' });

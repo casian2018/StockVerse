@@ -13,9 +13,9 @@ export default async function handler(req, res) {
 
     if (!token) return res.status(401).json({ error: "Unauthorized" });
 
-    const { taskId, updatedTask, subtaskId, subtaskStatus } = req.body;
+    const { taskId, updatedTask, subtaskId, subtaskStatus, newSubtask } = req.body;
 
-    if (!taskId || (!updatedTask && (!subtaskId || subtaskStatus === undefined))) {
+    if (!taskId || (!updatedTask && !subtaskId && !newSubtask)) {
         return res.status(400).json({ error: "Invalid data provided." });
     }
 
@@ -30,15 +30,32 @@ export default async function handler(req, res) {
         const taskIndex = user.tasks.findIndex((task) => task.id === taskId);
         if (taskIndex === -1) return res.status(404).json({ error: "Task not found" });
 
-        // Update Subtask Status
         if (subtaskId && subtaskStatus !== undefined) {
+            // Update Subtask Status
             const subtaskIndex = user.tasks[taskIndex].subtasks.findIndex((sub) => sub.id === subtaskId);
             if (subtaskIndex === -1) return res.status(404).json({ error: "Subtask not found" });
 
             user.tasks[taskIndex].subtasks[subtaskIndex].completed = subtaskStatus;
+        } else if (newSubtask) {
+            // Add New Subtask
+            const newSubtaskObject = {
+                id: Date.now().toString(), // Generate unique ID
+                title: newSubtask,
+                completed: false,
+            };
+
+            if (!user.tasks[taskIndex].subtasks) {
+                user.tasks[taskIndex].subtasks = [];
+            }
+
+            user.tasks[taskIndex].subtasks.push(newSubtaskObject);
         } else {
-            // Update Task (full update)
-            user.tasks[taskIndex] = { ...user.tasks[taskIndex], ...updatedTask, subtasks: updatedTask.subtasks || user.tasks[taskIndex].subtasks };
+            // Full Task Update
+            user.tasks[taskIndex] = { 
+                ...user.tasks[taskIndex], 
+                ...updatedTask, 
+                subtasks: updatedTask.subtasks || user.tasks[taskIndex].subtasks 
+            };
         }
 
         await db.collection("users").updateOne(

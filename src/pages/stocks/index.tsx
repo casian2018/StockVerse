@@ -24,7 +24,6 @@ export default function StockPage() {
     location: "",
     dateOfPurchase: "",
     quantity: 0,
-  
   });
   const [editingStock, setEditingStock] = useState<Stock | null>(null);
 
@@ -140,62 +139,77 @@ export default function StockPage() {
               }}
               className="flex flex-wrap gap-4"
             >
-              <input
-                type="text"
-                placeholder="Product Name"
-                value={newStock.productName}
-                onChange={(e) =>
-                  setNewStock({ ...newStock, productName: e.target.value })
-                }
-                className="flex-1 border p-2 rounded-md"
-                required
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                value={newStock.price}
-                onChange={(e) =>
-                  setNewStock({
-                    ...newStock,
-                    price: parseFloat(e.target.value),
-                  })
-                }
-                className="flex-1 border p-2 rounded-md"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Location"
-                value={newStock.location}
-                onChange={(e) =>
-                  setNewStock({ ...newStock, location: e.target.value })
-                }
-                className="flex-1 border p-2 rounded-md"
-                required
-              />
-              <input
-                type="date"
-                placeholder="Date of Purchase"
-                value={newStock.dateOfPurchase}
-                onChange={(e) =>
-                  setNewStock({ ...newStock, dateOfPurchase: e.target.value })
-                }
-                className="flex-1 border p-2 rounded-md"
-                required
-              />
-              <input
-                type="number"
-                placeholder="Quantity"
-                value={newStock.quantity}
-                onChange={(e) =>
-                  setNewStock({
-                    ...newStock,
-                    quantity: parseInt(e.target.value),
-                  })
-                }
-                className="flex-1 border p-2 rounded-md"
-                required
-              />
+              <label className="flex-1">
+                Product Name
+                <input
+                  type="text"
+                  placeholder="Product Name"
+                  value={newStock.productName}
+                  onChange={(e) =>
+                    setNewStock({ ...newStock, productName: e.target.value })
+                  }
+                  className="border p-2 rounded-md w-full"
+                  required
+                />
+              </label>
+              <label className="flex-1">
+                Price
+                <input
+                  type="number"
+                  placeholder="Price"
+                  value={newStock.price}
+                  onChange={(e) =>
+                    setNewStock({
+                      ...newStock,
+                      price: parseFloat(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded-md w-full"
+                  required
+                />
+              </label>
+              <label className="flex-1">
+                Location
+                <input
+                  type="text"
+                  placeholder="Location"
+                  value={newStock.location}
+                  onChange={(e) =>
+                    setNewStock({ ...newStock, location: e.target.value })
+                  }
+                  className="border p-2 rounded-md w-full"
+                  required
+                />
+              </label>
+              <label className="flex-1">
+                Date of Purchase
+                <input
+                  type="date"
+                  placeholder="Date of Purchase"
+                  value={newStock.dateOfPurchase}
+                  onChange={(e) =>
+                    setNewStock({ ...newStock, dateOfPurchase: e.target.value })
+                  }
+                  className="border p-2 rounded-md w-full"
+                  required
+                />
+              </label>
+              <label className="flex-1">
+                Quantity
+                <input
+                  type="number"
+                  placeholder="Quantity"
+                  value={newStock.quantity}
+                  onChange={(e) =>
+                    setNewStock({
+                      ...newStock,
+                      quantity: parseInt(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded-md w-full"
+                  required
+                />
+              </label>
               <button
                 type="submit"
                 className="px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition"
@@ -218,71 +232,93 @@ export default function StockPage() {
                 }}
                 className="flex flex-wrap gap-4"
               >
-                <input
-                  type="text"
-                  placeholder="Product Name"
-                  value={editingStock.productName}
-                  onChange={(e) =>
-                    setEditingStock({
-                      ...editingStock,
-                      productName: e.target.value,
-                    })
-                  }
-                  className="flex-1 border p-2 rounded-md"
-                  required
-                />
-                <input
-                  type="number"
-                  placeholder="Price"
-                  value={editingStock.price}
-                  onChange={(e) =>
-                    setEditingStock({
-                      ...editingStock,
-                      price: parseFloat(e.target.value),
-                    })
-                  }
-                  className="flex-1 border p-2 rounded-md"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Location"
-                  value={editingStock.location}
-                  onChange={(e) =>
-                    setEditingStock({
-                      ...editingStock,
-                      location: e.target.value,
-                    })
-                  }
-                  className="flex-1 border p-2 rounded-md"
-                  required
-                />
-                <input
-                  type="date"
-                  placeholder="Date of Purchase"
-                  value={editingStock.dateOfPurchase}
-                  onChange={(e) =>
-                    setEditingStock({
-                      ...editingStock,
-                      dateOfPurchase: e.target.value,
-                    })
-                  }
-                  className="flex-1 border p-2 rounded-md"
-                  required
-                />
-                <input
-                  type="number"
-                  placeholder="Quantity"
-                  value={editingStock.quantity}
-                  onChange={(e) =>
-                    setEditingStock({
-                      ...editingStock,
-                      quantity: parseInt(e.target.value),
-                    })
-                  }
-                  className="flex-1 border p-2 rounded-md"
-                  required
-                />
+                <label className="flex-1">
+                  Product Name
+                  <input
+                    type="text"
+                    placeholder="Product Name"
+                    value={editingStock.productName}
+                    onChange={(e) =>
+                      setEditingStock({
+                        ...editingStock,
+                        productName: e.target.value,
+                      })
+                    }
+                    className="border p-2 rounded-md w-full"
+                    required
+                  />
+                </label>
+                <label className="flex-1">
+                  Price
+                  <input
+                    type="number"
+                    placeholder="Price"
+                    value={editingStock.price || ""} // Avoid displaying "NaN"
+                    min={0}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      setEditingStock({
+                        ...editingStock,
+                        price: isNaN(value) || value < 0 ? 0 : value, // Ensure no NaN or negatives
+                      });
+                    }}
+                    onBlur={(e) => {
+                      if (!e.target.value) {
+                        setEditingStock({ ...editingStock, price: 0 }); // Reset empty input to 0
+                      }
+                    }}
+                    className="border p-2 rounded-md w-full"
+                    required
+                  />
+                </label>
+                <label className="flex-1">
+                  Location
+                  <input
+                    type="text"
+                    placeholder="Location"
+                    value={editingStock.location}
+                    onChange={(e) =>
+                      setEditingStock({
+                        ...editingStock,
+                        location: e.target.value,
+                      })
+                    }
+                    className="border p-2 rounded-md w-full"
+                    required
+                  />
+                </label>
+                <label className="flex-1">
+                  Date of Purchase
+                  <input
+                    type="date"
+                    placeholder="Date of Purchase"
+                    value={editingStock.dateOfPurchase}
+                    onChange={(e) =>
+                      setEditingStock({
+                        ...editingStock,
+                        dateOfPurchase: e.target.value,
+                      })
+                    }
+                    className="border p-2 rounded-md w-full"
+                    required
+                  />
+                </label>
+                <label className="flex-1">
+                  Quantity
+                  <input
+                    type="number"
+                    placeholder="Quantity"
+                    value={editingStock.quantity}
+                    onChange={(e) =>
+                      setEditingStock({
+                        ...editingStock,
+                        quantity: parseInt(e.target.value),
+                      })
+                    }
+                    className="border p-2 rounded-md w-full"
+                    required
+                  />
+                </label>
                 <div className="flex gap-4">
                   <button
                     type="submit"
