@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const [step, setStep] = useState<"email" | "password" | "setup" | "register">(
@@ -9,7 +10,6 @@ export default function LoginPage() {
   );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [hasPassword, setHasPassword] = useState(false);
   const [profilename, setProfilename] = useState("");
   const [business, setBusiness] = useState("");
   const [phone, setPhone] = useState("");
@@ -90,144 +90,166 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-screen min-h-screen flex items-center justify-center bg-indigo-50 px-4">
-  <div className="py-6 sm:max-w-md w-full">
-    <form
-      className="px-8 py-10 bg-white rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-500"
-      onSubmit={(e) => e.preventDefault()}
-    >
-      {/* Step Header */}
-      <h2 className="text-3xl font-extrabold text-center mb-6 text-indigo-700">
-        {step === "email"
-          ? "Welcome Back!"
-          : step === "password"
-          ? "Login"
-          : step === "setup"
-          ? "Set Up Your Password"
-          : "Register Your Account"}
-      </h2>
-      <p className="text-center text-gray-500 mb-6">
-        {step === "register"
-          ? "Get started with your business today!"
-          : "Please fill in the required details"}
-      </p>
+    <div className="relative w-screen min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-blue-50 via-white to-indigo-50">
+      {/* Animated Background Elements */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 0.4, scale: 1 }}
+        transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+        className="absolute top-10 left-10 w-64 h-64 bg-blue-200 rounded-full blur-3xl"
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 0.4, scale: 1 }}
+        transition={{ duration: 3.5, repeat: Infinity, repeatType: "reverse" }}
+        className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-300 rounded-full blur-3xl"
+      />
 
-      {/* Email Step */}
-      {step === "email" && (
-        <>
-          <input
-            type="email"
-            placeholder="Your Email"
-            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button
-            className="w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-all duration-300"
-            onClick={checkEmail}
-          >
-            Next
-          </button>
-        </>
-      )}
-
-      {/* Password Step */}
-      {step === "password" && (
-        <>
-          <input
-            type="password"
-            placeholder="Your Password"
-            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            className="w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-all duration-300"
-            onClick={handleLogin}
-          >
-            Login
-          </button>
-        </>
-      )}
-
-      {/* Password Setup */}
-      {step === "setup" && (
-        <>
-          <input
-            type="password"
-            placeholder="Set Password"
-            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            className="w-full py-2 bg-yellow-500 text-white font-bold rounded-lg hover:bg-yellow-600 transition-all duration-300"
-            onClick={handleSetupPassword}
-          >
-            Set Password
-          </button>
-        </>
-      )}
-
-      {/* Register Step */}
-      {step === "register" && (
-        <>
-          <input
-            type="text"
-            placeholder="Profile Name"
-            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-            value={profilename}
-            onChange={(e) => setProfilename(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Business Name"
-            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-            value={business}
-            onChange={(e) => setBusiness(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Phone"
-            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Create a Password"
-            className="w-full px-4 py-2 mb-4 border-2 rounded-lg focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            className="w-full py-2 bg-yellow-500 text-white font-bold rounded-lg hover:bg-yellow-600 transition-all duration-300"
-            onClick={handleRegister}
-          >
-            Register
-          </button>
-        </>
-      )}
-
-      {/* Footer */}
-      <p className="text-center text-gray-500 text-sm mt-6">
-        Need help?{" "}
-        <a
-          href="#"
-          className="text-indigo-600 font-semibold hover:underline"
+      {/* Main Form Container */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="py-8 sm:max-w-md w-full px-6 relative z-10"
+      >
+        <motion.form
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.4 }}
+          className="px-8 py-10 bg-white/80 backdrop-blur-lg border border-gray-100 rounded-3xl shadow-2xl"
+          onSubmit={(e) => e.preventDefault()}
         >
-          Contact Support
-        </a>
-      </p>
-    </form>
-  </div>
-</div>
+          {/* Step Header */}
+          <h2 className="text-4xl font-extrabold text-center mb-4 bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
+            {step === "email"
+              ? "Welcome Back!"
+              : step === "password"
+              ? "Login"
+              : step === "setup"
+              ? "Set Up Your Password"
+              : "Register Your Account"}
+          </h2>
+          <p className="text-center text-gray-500 mb-6">
+            {step === "register"
+              ? "Get started with your business today!"
+              : "Please fill in the required details"}
+          </p>
+
+          {/* Email Step */}
+          {step === "email" && (
+            <>
+              <input
+                type="email"
+                placeholder="Your Email"
+                className="w-full px-4 py-3 mb-4 border-2 rounded-xl focus:ring-4 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                onClick={checkEmail}
+              >
+                Next
+              </button>
+            </>
+          )}
+
+          {/* Password Step */}
+          {step === "password" && (
+            <>
+              <input
+                type="password"
+                placeholder="Your Password"
+                className="w-full px-4 py-3 mb-4 border-2 rounded-xl focus:ring-4 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                onClick={handleLogin}
+              >
+                Login
+              </button>
+            </>
+          )}
+
+          {/* Password Setup */}
+          {step === "setup" && (
+            <>
+              <input
+                type="password"
+                placeholder="Set Password"
+                className="w-full px-4 py-3 mb-4 border-2 rounded-xl focus:ring-4 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                className="w-full py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                onClick={handleSetupPassword}
+              >
+                Set Password
+              </button>
+            </>
+          )}
+
+          {/* Register Step */}
+          {step === "register" && (
+            <>
+              <input
+                type="text"
+                placeholder="Profile Name"
+                className="w-full px-4 py-3 mb-4 border-2 rounded-xl focus:ring-4 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300"
+                value={profilename}
+                onChange={(e) => setProfilename(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Business Name"
+                className="w-full px-4 py-3 mb-4 border-2 rounded-xl focus:ring-4 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300"
+                value={business}
+                onChange={(e) => setBusiness(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Phone"
+                className="w-full px-4 py-3 mb-4 border-2 rounded-xl focus:ring-4 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Create a Password"
+                className="w-full px-4 py-3 mb-4 border-2 rounded-xl focus:ring-4 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                className="w-full py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                onClick={handleRegister}
+              >
+                Register
+              </button>
+            </>
+          )}
+
+          {/* Footer */}
+          <p className="text-center text-gray-500 text-sm mt-6">
+            Need help?{" "}
+            <a
+              href="#"
+              className="text-blue-600 font-semibold hover:underline hover:text-indigo-600 transition"
+            >
+              Contact Support
+            </a>
+          </p>
+        </motion.form>
+      </motion.div>
+    </div>
   );
 }

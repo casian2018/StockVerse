@@ -1,40 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+## StockVerse workspace
 
-## Getting Started
+This repository hosts the StockVerse dashboard (Next.js 15). It contains:
 
-First, run the development server:
+- Traditional pages-router views under `src/pages`
+- Admin tooling (personal, accounts, automations, etc.)
+- API routes under `src/pages/api` that talk to MongoDB
+
+## Development
+
+Install dependencies and start the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) to sign in and navigate the workspace.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Automation alerts & notifications
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+The automation engine can now:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- Generate in-app alerts (`/api/automations/alerts`)
+- Send reminder emails through [Resend](https://resend.com/) (or any provider compatible with the Resend API)
+- Surface a notifications timeline at `/notifications`
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To enable email delivery, provide the following environment variables:
 
-## Learn More
+```
+RESEND_API_KEY=<your Resend API key>
+RESEND_FROM_EMAIL="StockVerse <notifications@yourdomain.com>"
+```
 
-To learn more about Next.js, take a look at the following resources:
+If these values are missing the engine gracefully skips the email step but still saves alerts and tasks.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Alerts respect role visibility and can be dismissed individually or in bulk. Administrators can configure custom alert copy, task creation, and email subject/body from the Automations page.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Inventory & asset tracking
 
-## Deploy on Vercel
+The Stocks workspace now supports:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Barcode capture (manual entry or in-browser scanner)
+- Reorder thresholds with proactive badges
+- Straight-line depreciation schedules with book value insights
+- Vendor scorecards that aggregate spend, locations, and satisfaction scores
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+You can maintain these fields on `/stocks`; edits sync to `users.stocks` through the existing API routes.
+
+## Enterprise notebook
+
+Admins on the $49.99 Enterprise plan unlock `/notes`, a shared canvas for the entire business. It supports markdown-style typing plus quick @mentions (pulled from your team directory).
+
+Data lives in the `workspace_notes` collection (per business). To expose the section on the dashboard, make sure the owner’s subscription `planId` is `enterprise`.
+
+## Collaboration layer
+
+- Tasks now support inline comments with @mentions – open any task card’s Comments button in `/todo`.
+- Mentions trigger optional Slack/Teams webhooks: add `SLACK_WEBHOOK_URL` and/or `TEAMS_WEBHOOK_URL` env vars to broadcast new comments.
+- Shareable calendars: import `/api/calendar.ics` in Google/Outlook/Apple to overlay task deadlines for the entire workspace.
+## Role-aware chat
+
+Visit `/chat` to direct-message coworkers. Rules:
+
+- Admins can reach every employee in their business
+- Managers can chat with Guests assigned to the same department
+- Guests can chat with their department’s manager
+
+Messages are persisted to the `messages` collection and refresh automatically every few seconds.
+
+## Industry-aware onboarding
+
+- Admins can tailor StockVerse per business type from the dashboard prompt or by calling `GET/PUT /api/business/profile`.
+- Industries ship with different module recommendations (retail prioritizes inventory, IT leans on tasks/chat, etc.).
+- The stored profile drives adaptive copy and CTA cards so every workspace feels purpose-built for its vertical.
+
+## Localization / i18n
+
+- The UI now ships with a lightweight i18n layer (`src/context/I18nContext.tsx`) and starter dictionaries in `src/locales/*`.
+- Users can switch between English, Spanish, or French from the sidebar language selector; their choice persists in `localStorage`.
+- Use the exported `useI18n().t()` helper in new components to keep copy translatable, and rely on the provider’s `formatCurrency` / `formatDate` helpers for locale-aware formatting.

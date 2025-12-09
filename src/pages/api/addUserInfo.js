@@ -8,11 +8,16 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
-    const { legalname, email, role, phone, salary, startDate, age } = req.body;
+    const { legalname, email, role, phone, salary, startDate, birthDate, department } = req.body;
 
     // Check if all required fields are provided
-    if (!legalname || !email || !role || !phone || !salary || !startDate || !age) {
+    if (!legalname || !email || !role || !phone || salary === undefined || !startDate || !birthDate || !department) {
         return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const parsedSalary = Number(salary);
+    if (Number.isNaN(parsedSalary)) {
+        return res.status(400).json({ message: 'Salary must be a number' });
     }
 
     try {
@@ -43,7 +48,7 @@ export default async function handler(req, res) {
         }
 
         // Create the new personal info object
-        const newPerson = { legalname, email, role, phone, salary, startDate, age };
+        const newPerson = { legalname, email, role, phone, salary: parsedSalary, startDate, birthDate, department };
 
         // Update the user's document to add the new personal info to their personal array
         const updateResult = await usersCollection.updateOne(
@@ -57,14 +62,16 @@ export default async function handler(req, res) {
         }
 
         // Create a new user document for the new person
-        const newUser = {
-            email,
-            password: '$2a$10$Io9jamYaj7qJpa48Qz.wI.tgjrt3RfFT9FJC0F.BeSCD6q6bxmnsO', // Set an appropriate default password or handle password creation separately
-            business: user.business, // Use the main user's business
-            phone,
-            profilename: legalname,
-            role: 'Guest'
-        };
+const newUser = {
+    email,
+    password: '$2a$10$Io9jamYaj7qJpa48Qz.wI.tgjrt3RfFT9FJC0F.BeSCD6q6bxmnsO', // Set an appropriate default password or handle password creation separately
+    business: user.business, // Use the main user's business
+    phone,
+    profilename: legalname,
+    role: 'Guest',
+    birthDate,
+    department
+};
 
         const insertResult = await usersCollection.insertOne(newUser);
 

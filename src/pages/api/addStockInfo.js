@@ -8,12 +8,54 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
-    const { productName, price, location, dateOfPurchase, quantity } = req.body;
+    const {
+        productName,
+        price,
+        location,
+        dateOfPurchase,
+        quantity,
+        barcode = "",
+        reorderPoint,
+        assetLifeYears,
+        residualValue,
+        vendor = {},
+        lastAuditDate = "",
+        notes = "",
+    } = req.body;
 
     // Check if all required fields are provided
-    if (!productName || !price || !location || !dateOfPurchase || !quantity) {
-        return res.status(400).json({ message: 'All fields are required' });
+    if (!productName || price === undefined || quantity === undefined) {
+        return res.status(400).json({ message: 'Product name, price, and quantity are required.' });
     }
+
+    const numericPrice = Number(price);
+    const numericQuantity = Number(quantity);
+
+    if (!Number.isFinite(numericPrice) || !Number.isFinite(numericQuantity)) {
+        return res.status(400).json({ message: 'Price and quantity must be numbers' });
+    }
+
+    const numericReorder =
+        reorderPoint === undefined || reorderPoint === null
+            ? undefined
+            : Number(reorderPoint);
+    const numericAssetLife =
+        assetLifeYears === undefined || assetLifeYears === null
+            ? undefined
+            : Number(assetLifeYears);
+    const numericResidual =
+        residualValue === undefined || residualValue === null
+            ? 0
+            : Number(residualValue);
+
+    const vendorInfo = {
+        name: vendor?.name || '',
+        contact: vendor?.contact || '',
+        score:
+            vendor?.score === undefined || vendor?.score === null
+                ? undefined
+                : Math.min(100, Math.max(0, Number(vendor.score))),
+    };
 
     try {
         // Verify JWT token to identify the user
@@ -43,7 +85,20 @@ export default async function handler(req, res) {
         }
 
         // Create the new stock object
-        const newStock = { productName, price, location, dateOfPurchase, quantity };
+        const newStock = {
+            productName,
+            price: numericPrice,
+            location: location || "",
+            dateOfPurchase: dateOfPurchase || "",
+            quantity: numericQuantity,
+            barcode,
+            reorderPoint: Number.isFinite(numericReorder) ? numericReorder : undefined,
+            assetLifeYears: Number.isFinite(numericAssetLife) ? numericAssetLife : undefined,
+            residualValue: Number.isFinite(numericResidual) ? numericResidual : 0,
+            vendor: vendorInfo,
+            lastAuditDate,
+            notes,
+        };
 
         // Update the user's document to add the new stock to their stocks array
         const updateResult = await usersCollection.updateOne(

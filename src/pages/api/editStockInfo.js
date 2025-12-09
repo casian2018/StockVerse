@@ -16,17 +16,55 @@ export default async function handler(req, res) {
     }
 
     // Extract fields from the request body
-    const { productName, price, location, dateOfPurchase, quantity } = req.body;
+    const {
+        productName,
+        price,
+        location,
+        dateOfPurchase,
+        quantity,
+        barcode = "",
+        reorderPoint,
+        assetLifeYears,
+        residualValue,
+        vendor = {},
+        lastAuditDate = "",
+        notes = "",
+    } = req.body;
 
     // Ensure all required fields are provided
-    if (!productName || price === undefined || !location || !dateOfPurchase || quantity === undefined) {
-        return res.status(400).json({ error: 'All fields are required' });
+    if (!productName || price === undefined || quantity === undefined) {
+        return res.status(400).json({ error: 'Product name, price, and quantity are required' });
     }
 
     // Make sure price and quantity are valid numbers
-    if (isNaN(price) || isNaN(quantity)) {
+    const numericPrice = Number(price);
+    const numericQuantity = Number(quantity);
+
+    if (!Number.isFinite(numericPrice) || !Number.isFinite(numericQuantity)) {
         return res.status(400).json({ error: 'Price and quantity must be numbers' });
     }
+
+    const numericReorder =
+        reorderPoint === undefined || reorderPoint === null
+            ? undefined
+            : Number(reorderPoint);
+    const numericAssetLife =
+        assetLifeYears === undefined || assetLifeYears === null
+            ? undefined
+            : Number(assetLifeYears);
+    const numericResidual =
+        residualValue === undefined || residualValue === null
+            ? 0
+            : Number(residualValue);
+
+    const vendorInfo = {
+        name: vendor?.name || '',
+        contact: vendor?.contact || '',
+        score:
+            vendor?.score === undefined || vendor?.score === null
+                ? undefined
+                : Math.min(100, Math.max(0, Number(vendor.score))),
+    };
 
     try {
         // Verify JWT token
@@ -54,10 +92,17 @@ export default async function handler(req, res) {
         // Update the stock item in the array
         user.stocks[stockIndex] = {
             ...user.stocks[stockIndex], // Keep the old fields
-            price, 
-            location, 
-            dateOfPurchase, 
-            quantity
+            price: numericPrice,
+            location: location || user.stocks[stockIndex].location || "",
+            dateOfPurchase: dateOfPurchase || user.stocks[stockIndex].dateOfPurchase || "",
+            quantity: numericQuantity,
+            barcode,
+            reorderPoint: Number.isFinite(numericReorder) ? numericReorder : undefined,
+            assetLifeYears: Number.isFinite(numericAssetLife) ? numericAssetLife : undefined,
+            residualValue: Number.isFinite(numericResidual) ? numericResidual : 0,
+            vendor: vendorInfo,
+            lastAuditDate,
+            notes,
         };
 
         // Save the updated user document

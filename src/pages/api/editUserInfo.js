@@ -16,16 +16,16 @@ export default async function handler(req, res) {
     }
 
     // Extract fields from the request body
-    const { legalname, email, role, phone, salary, startDate, age } = req.body;
+    const { legalname, email, role, phone, salary, startDate, birthDate, department } = req.body;
 
     // Ensure all required fields are provided
-    if (!legalname || !email || !role || !phone || salary === undefined || !startDate || age === undefined) {
+    if (!legalname || !email || !role || !phone || salary === undefined || !startDate || !birthDate || !department) {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
-    // Make sure salary and age are valid numbers
-    if (isNaN(salary) || isNaN(age)) {
-        return res.status(400).json({ error: 'Salary and age must be numbers' });
+    const parsedSalary = Number(salary);
+    if (isNaN(parsedSalary)) {
+        return res.status(400).json({ error: 'Salary must be a number' });
     }
 
     try {
@@ -45,27 +45,29 @@ export default async function handler(req, res) {
         }
 
         // Find the personal entry by email
-        const personalIndex = user.personal.findIndex(person => person.email === email);
+        const personalList = user.personal || [];
+        const personalIndex = personalList.findIndex(person => person.email === email);
 
         if (personalIndex === -1) {
             return res.status(404).json({ error: 'Personal data not found' });
         }
 
         // Update the personal item in the array
-        user.personal[personalIndex] = {
-            ...user.personal[personalIndex], // Keep the old fields
+        personalList[personalIndex] = {
+            ...personalList[personalIndex], // Keep the old fields
             legalname, 
             role, 
             phone, 
-            salary, 
-            startDate, 
-            age
+            salary: parsedSalary, 
+            startDate,
+            birthDate,
+            department
         };
 
         // Save the updated user document
         const result = await usersCollection.updateOne(
             { email: decoded.email },
-            { $set: { personal: user.personal } }
+            { $set: { personal: personalList } }
         );
 
         if (result.modifiedCount === 0) {
