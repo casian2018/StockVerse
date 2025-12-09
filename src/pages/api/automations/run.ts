@@ -125,9 +125,11 @@ export default async function handler(
       ? { _id: new ObjectId(automationId), business: user.business }
       : { business: user.business, active: true };
 
-    const automationList = (await automationsCol
-      .find(automationQuery)
-      .toArray()) as Automation[];
+    const rawList = await automationsCol.find(automationQuery).toArray();
+    const automationList: Automation[] = rawList.map((doc: any) => ({
+      ...doc,
+      _id: doc._id?.toString(),
+    }));
 
     const orgUsers = await users
       .find(

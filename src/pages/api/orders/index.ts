@@ -57,7 +57,9 @@ async function handleList(
     .toArray();
 
   return res.status(200).json({
-    orders: docs.map((doc) => serializeOrder(doc)),
+    orders: docs.map((doc: any) =>
+      serializeOrder({ ...doc, _id: doc._id?.toString() })
+    ),
   });
 }
 
@@ -152,7 +154,7 @@ async function handleCreate(
   return res.status(201).json({
     order: serializeOrder({
       ...orderDoc,
-      _id: insertedId,
-    }),
+      _id: insertedId.toString(),
+    } as any),
   });
 }

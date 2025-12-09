@@ -12,6 +12,7 @@ type UserDoc = {
   business?: string;
   profilename?: string;
   personal?: Array<{ department?: string }>;
+  subscription?: { planId?: string };
 };
 
 type MessageDoc = {

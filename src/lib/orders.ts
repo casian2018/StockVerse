@@ -23,8 +23,10 @@ export interface OrderFilePayload {
   uploadedBy?: string;
 }
 
+import { ObjectId } from "mongodb";
+
 export interface OrderRecord {
-  _id?: string;
+  _id?: string | ObjectId;
   orderNumber: string;
   business: string | null;
   createdBy: string;

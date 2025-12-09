@@ -633,13 +633,13 @@ export default function OrdersPage() {
             orders.map((order) => {
               const statusMeta = ORDER_STATUS_LABELS[order.status];
               const paymentMeta = PAYMENT_STATUS_LABELS[order.paymentStatus];
-              const busyLabel = orderBusy[order._id ?? ""];
+              const busyLabel = orderBusy[order._id ? order._id.toString() : ""];
               const isOwner = order.createdBy === user.email;
               const needsPayment =
                 order.status === "admin_confirmed" && order.paymentStatus === "ready";
               return (
                 <motion.article
-                  key={order._id}
+                  key={order._id?.toString()}
                   layout
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -674,7 +674,7 @@ export default function OrdersPage() {
                       <div className="flex flex-wrap gap-2">
                         {order.colors.map((color) => (
                           <span
-                            key={`${order._id}-${color}`}
+                            key={`${order._id?.toString()}-${color}`}
                             className="flex items-center gap-2 rounded-2xl border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600"
                           >
                             <span
@@ -922,7 +922,7 @@ function ClientActions({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => onDecision(order._id!, "approved")}
+            onClick={() => onDecision(order._id ? order._id.toString() : "", "approved")}
             disabled={busy}
             className="inline-flex items-center gap-2 rounded-2xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-white shadow hover:scale-[1.01]"
           >
@@ -930,7 +930,7 @@ function ClientActions({
           </button>
           <button
             type="button"
-            onClick={() => onDecision(order._id!, "rejected")}
+              onClick={() => onDecision(order._id ? order._id.toString() : "", "rejected")}
             disabled={busy}
             className="inline-flex items-center gap-2 rounded-2xl border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-rose-200 hover:text-rose-500"
           >
@@ -946,8 +946,8 @@ function ClientActions({
             Payment due {amountLabel ? `(${amountLabel})` : ""}
           </p>
           {paypalReady ? (
-            <PayPalButton
-              orderId={order._id!}
+              <PayPalButton
+                orderId={order._id ? order._id.toString() : ""}
               onSuccess={onPaymentComplete}
               setStatus={setStatus}
               successMessage="Payment complete. Thank you!"
@@ -963,8 +963,8 @@ function ClientActions({
       {status !== "cancelled" && status !== "paid" && (
         <button
           type="button"
-          onClick={() => onCancel(order._id!)}
-          disabled={busy || status === "paid"}
+          onClick={() => onCancel(order._id ? order._id.toString() : "")}
+          disabled={busy || String(status) === "paid"}
           className="inline-flex items-center gap-2 rounded-2xl border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50"
         >
           <XCircle className="w-4 h-4" />
@@ -1024,14 +1024,14 @@ function AdminActions({
           multiple
           className="hidden"
           onChange={(e) => {
-            onProofUpload(order._id!, e.target.files);
+            onProofUpload(order._id ? order._id.toString() : "", e.target.files);
             e.target.value = "";
           }}
         />
         {order.status !== "cancelled" && (
           <button
             type="button"
-            onClick={() => onCancel(order._id!)}
+            onClick={() => onCancel(order._id ? order._id.toString() : "")}
             disabled={busy}
             className="inline-flex items-center gap-2 rounded-2xl border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50"
           >
@@ -1039,9 +1039,9 @@ function AdminActions({
           </button>
         )}
         {order.paymentStatus === "ready" && order.status === "admin_confirmed" && (
-          <button
+            <button
             type="button"
-            onClick={() => onMarkPaid(order._id!)}
+            onClick={() => onMarkPaid(order._id ? order._id.toString() : "")}
             disabled={busy}
             className="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-50"
           >
@@ -1097,7 +1097,7 @@ function AdminActions({
           </div>
           <button
             type="button"
-            onClick={() => onConfirm(order._id!, quote, paymentLink || null, note)}
+            onClick={() => onConfirm(order._id ? order._id.toString() : "", quote, paymentLink || null, note)}
             disabled={busy}
             className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:scale-[1.01]"
           >

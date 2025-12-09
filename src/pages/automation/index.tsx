@@ -16,10 +16,10 @@ interface FormState {
   name: string;
   description: string;
   triggerType: "kpi" | "date";
-  metricId: string;
+  metricId: (typeof KPI_METRICS)[number]["id"];
   comparator: "above" | "below" | "equals";
   threshold: number;
-  dateField: string;
+  dateField: (typeof DATE_FIELDS)[number]["id"];
   offsetDays: number;
   actionType: "alert" | "task" | "email";
   message: string;
@@ -338,7 +338,10 @@ export default function AutomationPage() {
                       className="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2"
                       value={form.metricId}
                       onChange={(e) =>
-                        setForm({ ...form, metricId: e.target.value })
+                        setForm({
+                          ...form,
+                          metricId: e.target.value as (typeof KPI_METRICS)[number]["id"],
+                        })
                       }
                     >
                       {KPI_METRICS.map((metric) => (
@@ -389,7 +392,10 @@ export default function AutomationPage() {
                       className="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2"
                       value={form.dateField}
                       onChange={(e) =>
-                        setForm({ ...form, dateField: e.target.value })
+                        setForm({
+                          ...form,
+                          dateField: e.target.value as (typeof DATE_FIELDS)[number]["id"],
+                        })
                       }
                     >
                       {DATE_FIELDS.map((field) => (

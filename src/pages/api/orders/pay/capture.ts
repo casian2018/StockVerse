@@ -33,7 +33,7 @@ export default async function handler(
 
     const objectId = ensureObjectId(orderId);
     const orders = db.collection<OrderRecord>("orders");
-    const order = await orders.findOne({ _id: objectId });
+    const order = await orders.findOne({ _id: objectId as any });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
@@ -65,8 +65,8 @@ export default async function handler(
     }
 
     const now = new Date().toISOString();
-    const { value } = await orders.findOneAndUpdate(
-      { _id: objectId },
+    const result: any = await orders.findOneAndUpdate(
+      { _id: objectId as any },
       {
         $set: {
           status: "paid",
@@ -80,7 +80,7 @@ export default async function handler(
       { returnDocument: "after" }
     );
 
-    return res.status(200).json({ order: serializeOrder(value!) });
+    return res.status(200).json({ order: serializeOrder(result.value!) });
   } catch (error) {
     console.error("orders/pay/capture error", error);
     const message =

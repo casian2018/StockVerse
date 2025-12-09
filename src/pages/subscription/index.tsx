@@ -133,11 +133,12 @@ export default function SubscriptionPage() {
     ? subscriptionPlanMap[currentSubscription.planId]
     : null;
 
-  const trialActive =
+  const trialActive = Boolean(
     currentSubscription?.status === "trial" &&
-    currentSubscription.trialEndsAt &&
-    new Date(currentSubscription.trialEndsAt) > new Date();
-  const trialEligible = !currentSubscription?.trialUsed;
+      currentSubscription.trialEndsAt &&
+      new Date(currentSubscription.trialEndsAt) > new Date()
+  );
+  const trialEligible = !(currentSubscription?.trialUsed ?? false);
 
   const startTrial = async () => {
     setStatusMessage(null);

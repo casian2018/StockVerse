@@ -365,10 +365,10 @@ function StockPage() {
     const avgVendorScore =
       stocks.length > 0
         ? Math.round(
-            stocks.reduce(
-              (sum, stock) => sum + (stock.vendor?.score || emptyVendor.score),
-              0
-            ) / stocks.length
+            stocks.reduce((sum, stock) => {
+              const score = stock.vendor && typeof stock.vendor.score === "number" ? stock.vendor.score : (emptyVendor.score ?? 0);
+              return sum + score;
+            }, 0) / stocks.length
           )
         : 0;
     const depreciated = stocks.filter(

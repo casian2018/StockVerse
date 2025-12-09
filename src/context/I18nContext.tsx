@@ -17,8 +17,24 @@ import tr from "@/locales/tr.json";
 
 type Messages = Record<string, string>;
 
-const dictionaries = { en, es, fr, de, it, pt, ru, zh, ja, ko, hi, ar, nl, sv, tr } as unknown as Record<Locale, Messages>;
-export type Locale = keyof typeof dictionaries;
+export type Locale =
+  | "en"
+  | "es"
+  | "fr"
+  | "de"
+  | "it"
+  | "pt"
+  | "ru"
+  | "zh"
+  | "ja"
+  | "ko"
+  | "hi"
+  | "ar"
+  | "nl"
+  | "sv"
+  | "tr";
+
+const dictionaries: Record<Locale, Messages> = { en, es, fr, de, it, pt, ru, zh, ja, ko, hi, ar, nl, sv, tr };
 
 export const supportedLanguages: Array<{ code: Locale; label: string }> = [
   { code: "en", label: "English" },

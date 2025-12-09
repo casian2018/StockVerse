@@ -70,7 +70,7 @@ export default async function handler(
         return res.status(400).json({ error: "Missing fields" });
       }
       const now = new Date().toISOString();
-      const doc: Automation = {
+      const doc: Omit<Automation, "_id"> = {
         business: user.business,
         name: payload.name,
         description: payload.description,

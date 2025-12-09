@@ -42,7 +42,7 @@ async function handleUpdate(
   const { user, db } = await requireUser(req);
   const orderId = ensureObjectId(req.query.orderId as string);
   const orders = db.collection<OrderRecord>("orders");
-  const order = await orders.findOne({ _id: orderId });
+  const order = await orders.findOne({ _id: orderId as any });
 
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
@@ -83,8 +83,8 @@ async function handleUpdate(
       if (!files.length) {
         return res.status(400).json({ error: "Attach at least one proof." });
       }
-      const { value } = await orders.findOneAndUpdate(
-        { _id: orderId },
+      const result: any = await orders.findOneAndUpdate(
+        { _id: orderId as any },
         {
           $push: { proofs: { $each: files } },
           $set: {
@@ -95,7 +95,7 @@ async function handleUpdate(
         },
         { returnDocument: "after" }
       );
-      return res.status(200).json({ order: serializeOrder(value!) });
+      return res.status(200).json({ order: serializeOrder(result.value!) });
     }
 
     case "clientDecision": {
@@ -130,12 +130,12 @@ async function handleUpdate(
         update.paypalOrderId = null;
       }
 
-      const { value } = await orders.findOneAndUpdate(
-        { _id: orderId },
+      const result: any = await orders.findOneAndUpdate(
+        { _id: orderId as any },
         { $set: update },
         { returnDocument: "after" }
       );
-      return res.status(200).json({ order: serializeOrder(value!) });
+      return res.status(200).json({ order: serializeOrder(result.value!) });
     }
 
     case "adminConfirm": {
@@ -166,8 +166,8 @@ async function handleUpdate(
       const paymentStatus =
         quoteAmount && quoteAmount > 0 ? "ready" : "blocked";
 
-      const { value } = await orders.findOneAndUpdate(
-        { _id: orderId },
+      const result: any = await orders.findOneAndUpdate(
+        { _id: orderId as any },
         {
           $set: {
             status: "admin_confirmed",
@@ -183,15 +183,15 @@ async function handleUpdate(
         },
         { returnDocument: "after" }
       );
-      return res.status(200).json({ order: serializeOrder(value!) });
+      return res.status(200).json({ order: serializeOrder(result.value!) });
     }
 
     case "markPaid": {
       if (!isAdmin) {
         return res.status(403).json({ error: "Admins only" });
       }
-      const { value } = await orders.findOneAndUpdate(
-        { _id: orderId },
+      const result: any = await orders.findOneAndUpdate(
+        { _id: orderId as any },
         {
           $set: {
             status: "paid",
@@ -203,7 +203,7 @@ async function handleUpdate(
         },
         { returnDocument: "after" }
       );
-      return res.status(200).json({ order: serializeOrder(value!) });
+      return res.status(200).json({ order: serializeOrder(result.value!) });
     }
 
     case "cancel": {
@@ -211,8 +211,8 @@ async function handleUpdate(
         return res.status(403).json({ error: "Not allowed" });
       }
       const noteField = isAdmin ? "adminNotes" : "clientNotes";
-      const { value } = await orders.findOneAndUpdate(
-        { _id: orderId },
+      const result: any = await orders.findOneAndUpdate(
+        { _id: orderId as any },
         {
           $set: {
             status: "cancelled",
@@ -231,7 +231,7 @@ async function handleUpdate(
         },
         { returnDocument: "after" }
       );
-      return res.status(200).json({ order: serializeOrder(value!) });
+      return res.status(200).json({ order: serializeOrder(result.value!) });
     }
 
     default:
