@@ -15,7 +15,9 @@ import nl from "@/locales/nl.json";
 import sv from "@/locales/sv.json";
 import tr from "@/locales/tr.json";
 
-const dictionaries = { en, es, fr, de, it, pt, ru, zh, ja, ko, hi, ar, nl, sv, tr } as const;
+type Messages = Record<string, string>;
+
+const dictionaries = { en, es, fr, de, it, pt, ru, zh, ja, ko, hi, ar, nl, sv, tr } as unknown as Record<Locale, Messages>;
 export type Locale = keyof typeof dictionaries;
 
 export const supportedLanguages: Array<{ code: Locale; label: string }> = [
@@ -36,7 +38,6 @@ export const supportedLanguages: Array<{ code: Locale; label: string }> = [
   { code: "tr", label: "Türkçe" },
 ];
 
-type Messages = Record<string, string>;
 
 interface I18nContextValue {
   locale: Locale;
